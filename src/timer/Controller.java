@@ -1,4 +1,4 @@
-package sample;
+package timer;
 
 public class Controller {
 }
