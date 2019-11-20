@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PandaTracker:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PandaTracker_jar</output-path>
+    <root id="archive" name="PandaTracker.jar">
+      <element id="module-output" name="PandaTracker" />
+    </root>
+  </artifact>
+</component>

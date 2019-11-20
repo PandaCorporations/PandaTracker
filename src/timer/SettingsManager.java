@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SettingsController {
+public class SettingsManager {
     private static String version;
     private static boolean volumeOn;
     private static int volume;
     private static String libraryType;
     private static String alarmFrequency;
 
-    public SettingsController(){
+    public SettingsManager(){
         this.version = "0.0.1";
         this.volumeOn = false;
         this.volume = 100;
@@ -35,7 +35,6 @@ public class SettingsController {
         return true;
     }
 
-
     /**
      * load the properties file if there is one.
      * @return true if successful.
@@ -49,7 +48,7 @@ public class SettingsController {
         if (inputStream != null){
             prop.load(inputStream);
         } else {
-            throw new FileNotFoundException("config file");
+            throw new FileNotFoundException("config file not found");
         }
         return prop;
     }
@@ -59,7 +58,7 @@ public class SettingsController {
     }
 
     public static void setVersion(String version) {
-        SettingsController.version = version;
+        SettingsManager.version = version;
     }
 
     public static boolean isVolumeOn() {
@@ -67,7 +66,7 @@ public class SettingsController {
     }
 
     public static void setVolumeOn(boolean volumeOn) {
-        SettingsController.volumeOn = volumeOn;
+        SettingsManager.volumeOn = volumeOn;
     }
 
     public static int getVolume() {
@@ -75,7 +74,7 @@ public class SettingsController {
     }
 
     public static void setVolume(int volume) {
-        SettingsController.volume = volume;
+        SettingsManager.volume = volume;
     }
 
     public static String getLibraryType() {
@@ -83,7 +82,7 @@ public class SettingsController {
     }
 
     public static void setLibraryType(String libraryType) {
-        SettingsController.libraryType = libraryType;
+        SettingsManager.libraryType = libraryType;
     }
 
     public static String getAlarmFrequency() {
@@ -91,6 +90,6 @@ public class SettingsController {
     }
 
     public static void setAlarmFrequency(String alarmFrequency) {
-        SettingsController.alarmFrequency = alarmFrequency;
+        SettingsManager.alarmFrequency = alarmFrequency;
     }
 }
