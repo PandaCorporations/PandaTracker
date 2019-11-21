@@ -8,6 +8,7 @@ import java.io.IOException;
  * This is a sound library that will return the correct sound file on request
  */
 public class SoundLibrary {
+    private String resourceFolder = "resources/";
     private String libraryName;
     private int volume;
     private AudioInputStream audioInputStream;
@@ -23,7 +24,7 @@ public class SoundLibrary {
             hourString = "0";
         }
         hourString = hourString + hour;
-        String filePath = libraryName + "-" + hourString + ".ogg";
+        String filePath = resourceFolder + libraryName + "/" + libraryName + "-" + hourString + ".wav";
         audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
         clip = AudioSystem.getClip();
         clip.open(audioInputStream);
@@ -33,7 +34,7 @@ public class SoundLibrary {
     }
 
     public boolean playTestSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-        String filePath = libraryName + "-Library.ogg";
+        String filePath = resourceFolder + libraryName + "/" + libraryName + "-Library.wav";
         audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
         clip = AudioSystem.getClip();
         clip.open(audioInputStream);

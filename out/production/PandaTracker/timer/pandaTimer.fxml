@@ -17,7 +17,7 @@
          <children>
             <AnchorPane id="settingsPanel" prefHeight="200.0" prefWidth="200.0">
                <children>
-                  <ChoiceBox id="soundLibraryVar" layoutX="25.0" layoutY="88.0" prefWidth="150.0" />
+                  <ChoiceBox fx:id="soundLibraryVar" layoutX="25.0" layoutY="88.0" prefWidth="150.0" />
                   <Label id="titleLabel" layoutX="25.0" layoutY="14.0" text="Panda Timer">
                      <font>
                         <Font size="20.0" />
@@ -32,7 +32,7 @@
                   <ChoiceBox fx:id="alarmFrequencyVar" layoutX="21.0" layoutY="250.0" prefHeight="26.0" prefWidth="110.0" />
                   <CheckBox fx:id="volumeMuteVar" layoutX="21.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Volume Mute" />
                   <Button fx:id="saveSessionData" layoutX="24.0" layoutY="360.0" mnemonicParsing="false" text="Save Session Data" />
-                  <Button fx:id="testSound" layoutX="87.0" layoutY="127.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" text="Test Sound" />
+                  <Button fx:id="testSound" onAction="#onPlayTestSound" layoutX="87.0" layoutY="127.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" text="Test Sound" />
                </children>
             </AnchorPane>
          </children>
