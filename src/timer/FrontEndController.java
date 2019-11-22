@@ -11,6 +11,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class FrontEndController {
     @FXML private Label versionVar;
@@ -23,8 +24,12 @@ public class FrontEndController {
     @FXML private Label startupVar;
     @FXML private ScrollPane sessionTrackerPane;
     @FXML private ChoiceBox soundLibraryVar;
-    SoundLibrary soundLibrary;
+    private SoundLibrary soundLibrary;
 
+    /**
+     * gets all the settings from config
+     * @return true if successful
+     */
     private boolean initializeFrontEndFromConfig(){
         volumeMuteVar.setSelected(SettingsManager.isVolumeOn());
         versionVar.setText(SettingsManager.getVersion());
@@ -45,26 +50,51 @@ public class FrontEndController {
             }
         });
         ObservableList<String> libraryOptions = FXCollections.observableArrayList();
-        for (String str : directories) {
-            libraryOptions.add(str);
-        }
+        libraryOptions.addAll(Arrays.asList(directories));
         soundLibraryVar.setItems(libraryOptions);
         soundLibraryVar.setValue(SettingsManager.getLibraryType());
         if (soundLibraryVar.getValue() != ""){
-            soundLibrary = new SoundLibrary(SettingsManager.getLibraryType());
+            soundLibrary = new SoundLibrary(SettingsManager.getLibraryType(), SettingsManager.getVolume());
         }
         return true;
     }
 
+    /**
+     * Plays the test sound
+     * @param event jfx
+     * @throws UnsupportedAudioFileException file not supported
+     * @throws IOException file read error
+     * @throws LineUnavailableException i have no idea
+     */
     @FXML void onPlayTestSound(ActionEvent event) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        soundLibrary.playTestSound();
+        if (!volumeMuteVar.isSelected()){
+            soundLibrary.playTestSound();
+        }
     }
 
 
+    /**
+     * FXML init
+     * @throws IOException bad file read
+     */
     @FXML
     public void initialize() throws IOException {
         SettingsManager settingsManager = new SettingsManager();
         settingsManager.setupSettings();
         initializeFrontEndFromConfig();
+
+        //handle volume slider changes
+        volumeSliderVar.valueProperty().addListener((observable, oldValue, newValue) -> {
+            soundLibrary.setVolume(newValue.intValue());
+        });
+
+        //handle mute changes
+        volumeMuteVar.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue){
+                soundLibrary.setVolume(0);
+            } else {
+                soundLibrary.setVolume((int)volumeSliderVar.getValue());
+            }
+        });
     }
 }

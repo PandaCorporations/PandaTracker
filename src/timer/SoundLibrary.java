@@ -1,6 +1,7 @@
 package timer;
 
 import javax.sound.sampled.*;
+import java.awt.geom.Arc2D;
 import java.io.File;
 import java.io.IOException;
 
@@ -10,15 +11,30 @@ import java.io.IOException;
 public class SoundLibrary {
     private String resourceFolder = "resources/";
     private String libraryName;
-    private int volume;
+    private float volume;
     private AudioInputStream audioInputStream;
     private Clip clip;
+    private FloatControl gainControl;
 
-    public SoundLibrary(String libraryName){
+    SoundLibrary(String libraryName, int volume){
         this.libraryName = libraryName;
+        this.volume = (float) volume /100;
+    }
+
+    boolean setVolume(int volume){
+        this.volume = (float) volume /100;
+        if (clip != null && gainControl != null){
+            float range = gainControl.getMaximum() - gainControl.getMinimum();
+            float gain = (range * this.volume) + gainControl.getMinimum();
+            gainControl.setValue(gain);
+        }
+        return true;
     }
 
     public boolean playHourlySound(int hour) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        if (clip != null){
+            clip.close();
+        }
         String hourString = "";
         if (hour < 10){
             hourString = "0";
@@ -28,23 +44,31 @@ public class SoundLibrary {
         audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
         clip = AudioSystem.getClip();
         clip.open(audioInputStream);
+
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float range = gainControl.getMaximum() - gainControl.getMinimum();
+        float gain = (range * this.volume) + gainControl.getMinimum();
+        gainControl.setValue(gain);
         //play sound
         clip.start();
         return true;
     }
 
-    public boolean playTestSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    boolean playTestSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        if (clip != null){
+            clip.close();
+        }
         String filePath = resourceFolder + libraryName + "/" + libraryName + "-Library.wav";
         audioInputStream = AudioSystem.getAudioInputStream(new File(filePath).getAbsoluteFile());
         clip = AudioSystem.getClip();
         clip.open(audioInputStream);
+
+        gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float range = gainControl.getMaximum() - gainControl.getMinimum();
+        float gain = (range * this.volume) + gainControl.getMinimum();
+        gainControl.setValue(gain);
         //play sound
         clip.start();
-        return true;
-    }
-
-    public boolean setVolume(int volume){
-        this.volume = volume;
         return true;
     }
 }
