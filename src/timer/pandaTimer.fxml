@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:controller="timer.FrontEndController" id="outerBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<HBox id="outerBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="timer.FrontEndController">
    <children>
       <HBox id="leftPanel" prefHeight="100.0" prefWidth="200.0">
          <children>
@@ -32,7 +32,8 @@
                   <ChoiceBox fx:id="alarmFrequencyVar" layoutX="21.0" layoutY="250.0" prefHeight="26.0" prefWidth="110.0" />
                   <CheckBox fx:id="volumeMuteVar" layoutX="21.0" layoutY="187.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="126.0" text="Volume Mute" />
                   <Button fx:id="saveSessionData" layoutX="24.0" layoutY="360.0" mnemonicParsing="false" text="Save Session Data" />
-                  <Button fx:id="testSound" onAction="#onPlayTestSound" layoutX="87.0" layoutY="127.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="88.0" text="Test Sound" />
+                  <Button fx:id="testSound" layoutX="87.0" layoutY="127.0" mnemonicParsing="false" onAction="#onPlayTestSound" prefHeight="26.0" prefWidth="88.0" text="Test Sound" />
+                  <Button fx:id="saveCurrentSettings" layoutX="24.0" layoutY="325.0" mnemonicParsing="false" onAction="#onSaveSettings" text="Save Current Settings" />
                </children>
             </AnchorPane>
          </children>

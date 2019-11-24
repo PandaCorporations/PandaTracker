@@ -1,7 +1,6 @@
 package timer;
 
 import javax.sound.sampled.*;
-import java.awt.geom.Arc2D;
 import java.io.File;
 import java.io.IOException;
 
@@ -21,14 +20,13 @@ public class SoundLibrary {
         this.volume = (float) volume /100;
     }
 
-    boolean setVolume(int volume){
+    void setVolume(int volume){
         this.volume = (float) volume /100;
         if (clip != null && gainControl != null){
             float range = gainControl.getMaximum() - gainControl.getMinimum();
             float gain = (range * this.volume) + gainControl.getMinimum();
             gainControl.setValue(gain);
         }
-        return true;
     }
 
     public boolean playHourlySound(int hour) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
@@ -54,7 +52,7 @@ public class SoundLibrary {
         return true;
     }
 
-    boolean playTestSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+    void playTestSound() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         if (clip != null){
             clip.close();
         }
@@ -69,6 +67,5 @@ public class SoundLibrary {
         gainControl.setValue(gain);
         //play sound
         clip.start();
-        return true;
     }
 }

@@ -1,11 +1,13 @@
 package timer;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
 class SettingsManager {
+    private static Properties prop;
     private static String version;
     private static boolean volumeOn;
     private static int volume;
@@ -17,17 +19,15 @@ class SettingsManager {
 
     /**
      * sets up settings
-     * @return true if successful
-     * @throws IOException
+     * @throws IOException failed to open file
      */
-    boolean setupSettings() throws IOException {
-        Properties prop = loadPropertiesFile();
+    void setupSettings() throws IOException {
+        prop = loadPropertiesFile();
         version = prop.getProperty("version");
         volumeOn = Boolean.parseBoolean(prop.getProperty("volumeOn"));
         volume = Integer.parseInt(prop.getProperty("volume"));
         libraryType = prop.getProperty("libraryType");
         alarmFrequency = prop.getProperty("alarmFrequency");
-        return true;
     }
 
     /**
@@ -37,9 +37,8 @@ class SettingsManager {
      */
     private Properties loadPropertiesFile() throws IOException {
         Properties prop = new Properties();
-        String filePath = "config.properties";
 
-        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(filePath);
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
         if (inputStream != null){
             prop.load(inputStream);
         } else {
@@ -47,6 +46,16 @@ class SettingsManager {
         }
         return prop;
     }
+
+    void savePropertiesFile() throws IOException {
+        prop.setProperty("version",version);
+        prop.setProperty("volumeOn", String.valueOf(volumeOn));
+        prop.setProperty("volume", String.valueOf(volume));
+        prop.setProperty("libraryType",libraryType);
+        prop.setProperty("alarmFrequency",alarmFrequency);
+        prop.store(new FileOutputStream("config.properties"), null);
+    }
+
 
     static String getVersion() {
         return version;

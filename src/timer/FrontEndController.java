@@ -24,13 +24,14 @@ public class FrontEndController {
     @FXML private Label startupVar;
     @FXML private ScrollPane sessionTrackerPane;
     @FXML private ChoiceBox soundLibraryVar;
+    @FXML private Button saveCurrentSettings;
+    private SettingsManager settingsManager;
     private SoundLibrary soundLibrary;
 
     /**
      * gets all the settings from config
-     * @return true if successful
      */
-    private boolean initializeFrontEndFromConfig(){
+    private void initializeFrontEndFromConfig(){
         volumeMuteVar.setSelected(SettingsManager.isVolumeOn());
         versionVar.setText(SettingsManager.getVersion());
         volumeSliderVar.adjustValue(SettingsManager.getVolume());
@@ -56,7 +57,6 @@ public class FrontEndController {
         if (soundLibraryVar.getValue() != ""){
             soundLibrary = new SoundLibrary(SettingsManager.getLibraryType(), SettingsManager.getVolume());
         }
-        return true;
     }
 
     /**
@@ -72,6 +72,19 @@ public class FrontEndController {
         }
     }
 
+    @FXML void onSaveSettings(ActionEvent event) throws IOException {
+        settingsManager.setVolumeOn(volumeMuteVar.isSelected());
+        settingsManager.setVolume((int) (volumeSliderVar.getValue() * 100));
+        settingsManager.setLibraryType(soundLibraryVar.getValue().toString());
+        settingsManager.setAlarmFrequency(alarmFrequencyVar.getValue().toString());
+        settingsManager.savePropertiesFile();
+    }
+
+    public void setClockVar(String sysTime, String startupTime) {
+        startupVar.setText(startupTime);
+        systemClockVar.setText(sysTime);
+    }
+
 
     /**
      * FXML init
@@ -79,7 +92,7 @@ public class FrontEndController {
      */
     @FXML
     public void initialize() throws IOException {
-        SettingsManager settingsManager = new SettingsManager();
+        settingsManager = new SettingsManager();
         settingsManager.setupSettings();
         initializeFrontEndFromConfig();
 
