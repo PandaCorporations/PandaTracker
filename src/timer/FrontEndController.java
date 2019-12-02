@@ -1,10 +1,14 @@
 package timer;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
@@ -12,6 +16,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Timer;
 
 public class FrontEndController {
     @FXML private Label versionVar;
@@ -27,6 +32,9 @@ public class FrontEndController {
     @FXML private Button saveCurrentSettings;
     private SettingsManager settingsManager;
     private SoundLibrary soundLibrary;
+
+    public static String currentTime;
+    public static String sinceStartup;
 
     /**
      * gets all the settings from config
@@ -80,9 +88,10 @@ public class FrontEndController {
         settingsManager.savePropertiesFile();
     }
 
-    public void setClockVar(String sysTime, String startupTime) {
-        startupVar.setText(startupTime);
-        systemClockVar.setText(sysTime);
+    @FXML
+    public void setClockVar(){
+        startupVar.setText(this.sinceStartup);
+        systemClockVar.setText(this.currentTime);
     }
 
 
@@ -109,5 +118,19 @@ public class FrontEndController {
                 soundLibrary.setVolume((int)volumeSliderVar.getValue());
             }
         });
+
+        //tick timer
+        // not in fx application thread
+        TimerTick timerTick = new TimerTick(this);
+        Timer clockTimer = new Timer(true);
+        clockTimer.schedule(timerTick,0,1000);
+
+        Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
+            setClockVar();
+        }),
+                new KeyFrame(Duration.seconds(1))
+        );
+        clock.setCycleCount(Animation.INDEFINITE);
+        clock.play();
     }
 }

@@ -10,9 +10,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        Parent root = fxmlLoader.load(getClass().getResource("pandaTimer.fxml"));
-        TimerTick timerTick = new TimerTick((FrontEndController) fxmlLoader.getController());
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pandaTimer.fxml"));
+        Parent root = fxmlLoader.load();
+
         primaryStage.setTitle("Panda Timer");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.setResizable(false);

@@ -1,9 +1,6 @@
 package timer;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 class SettingsManager {
@@ -42,7 +39,15 @@ class SettingsManager {
         if (inputStream != null){
             prop.load(inputStream);
         } else {
-            throw new FileNotFoundException("config file not found");
+            File file = new File("config.properties");
+            Properties newProp = new Properties();
+            newProp.setProperty("version","0.0.0");
+            newProp.setProperty("volumeOn", "1");
+            newProp.setProperty("volume", "100");
+            newProp.setProperty("libraryType","Verniy");
+            newProp.setProperty("alarmFrequency","Hourly");
+            newProp.store(new FileOutputStream("config.properties"), null);
+            loadPropertiesFile();
         }
         return prop;
     }
