@@ -52,7 +52,7 @@ class SettingsManager {
         return prop;
     }
 
-    void savePropertiesFile() throws IOException {
+    static void savePropertiesFile() throws IOException {
         prop.setProperty("version",version);
         prop.setProperty("volumeOn", String.valueOf(volumeOn));
         prop.setProperty("volume", String.valueOf(volume));

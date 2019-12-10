@@ -15,6 +15,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Timer;
 
@@ -35,6 +36,8 @@ public class FrontEndController {
 
     public static String currentTime;
     public static String sinceStartup;
+    private static boolean rangThisHour;
+    private static int rangCounter;
 
     /**
      * gets all the settings from config
@@ -65,6 +68,8 @@ public class FrontEndController {
         if (soundLibraryVar.getValue() != ""){
             soundLibrary = new SoundLibrary(SettingsManager.getLibraryType(), SettingsManager.getVolume());
         }
+        rangThisHour = false;
+        rangCounter = 0;
     }
 
     /**
@@ -81,17 +86,34 @@ public class FrontEndController {
     }
 
     @FXML void onSaveSettings(ActionEvent event) throws IOException {
-        settingsManager.setVolumeOn(volumeMuteVar.isSelected());
-        settingsManager.setVolume((int) (volumeSliderVar.getValue() * 100));
-        settingsManager.setLibraryType(soundLibraryVar.getValue().toString());
-        settingsManager.setAlarmFrequency(alarmFrequencyVar.getValue().toString());
-        settingsManager.savePropertiesFile();
+        SettingsManager.setVolumeOn(volumeMuteVar.isSelected());
+        SettingsManager.setVolume((int) (volumeSliderVar.getValue() * 100));
+        SettingsManager.setLibraryType(soundLibraryVar.getValue().toString());
+        SettingsManager.setAlarmFrequency(alarmFrequencyVar.getValue().toString());
+        SettingsManager.savePropertiesFile();
     }
 
     @FXML
-    public void setClockVar(){
-        startupVar.setText(this.sinceStartup);
-        systemClockVar.setText(this.currentTime);
+    private void setClockVar(){
+        startupVar.setText(sinceStartup);
+        systemClockVar.setText(currentTime);
+    }
+
+    private void handlePlayHourlySound() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (!rangThisHour){
+            rangCounter = 0;
+            int minute = currentTime.getMinute();
+            if (minute == 0){
+                int hour = currentTime.getHour();
+                rangThisHour = true;
+                soundLibrary.playHourlySound(hour);
+            }
+        } else if (rangCounter > 60){
+            rangThisHour = false;
+        } else {
+            rangCounter++;
+        }
     }
 
 
@@ -127,6 +149,12 @@ public class FrontEndController {
 
         Timeline clock = new Timeline(new KeyFrame(Duration.ZERO, e -> {
             setClockVar();
+            //play hourly
+            try {
+                handlePlayHourlySound();
+            } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+                ex.printStackTrace();
+            }
         }),
                 new KeyFrame(Duration.seconds(1))
         );
